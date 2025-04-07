@@ -3,7 +3,7 @@ Description=Automatcly cycle desktop wallpaper
 
 [Service]
 Type=oneshot
-ExecStart=/bin/sh /usr/bin/wallpaper-cycler %u
+ExecStart=/bin/sh /usr/bin/wallpaper-cycler user %u
 
 [Install]
 WantedBy=default.target
