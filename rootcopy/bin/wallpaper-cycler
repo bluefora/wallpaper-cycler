@@ -34,8 +34,8 @@ if [[ $# -gt 0 ]]; then
 
 	elif [[ " $1 " = " user " ]] ;then
 		if [[ $# -eq 2 ]]; then
-			if [[ -d /home/$2 ]]; then
-				/bin/bash HOME=/home/$2 USER=$2 $0 cycle
+			if [[ -d /var/home/$2 ]]; then
+				HOME="/var/home/$2" USER="$2" /bin/bash $0 cycle
 			else
 				echo "Could not find home directory for user"
 				exit 2
