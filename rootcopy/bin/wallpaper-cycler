@@ -5,6 +5,12 @@ CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/wallpaper-cycler"
 
 if [[ $# -gt 0 ]]; then
 	WALLPAPERS=/home/$USER/Pictures/Wallpapers
+	
+	
+	# Poor man's config
+	if [[ -f "$CONFIG_DIR/path" ]]; then
+		WALLPAPERS="`cat $CONFIG_DIR/path`"
+	fi
 
 	# disable and return exit code
 	if [[ " $1 " = " disable " ]] ;then
@@ -25,10 +31,25 @@ if [[ $# -gt 0 ]]; then
 		mkdir -p $WALLPAPERS && $0 enable
 		exit $?
 
+
+	elif [[ " $1 " = " user " ]] ;then
+		if [[ $# -eq 2 ]]; then
+			if [[ -d /var/home/$2 ]]; then
+				HOME="/var/home/$2" USER="$2" /bin/bash $0 cycle
+			else
+				echo "Could not find home directory for user"
+				exit 2
+			fi
+		else
+			echo "No valid user set"
+			exit 1
+		fi
+
 	# Set wallpaper directory
 	elif [[ " $1 " = " path " ]] ;then
 		if [[ $# -eq 2 ]]; then
-			[[ -d "$2" ]] && echo "$2" > $CONFIG_DIR/directory
+			path=`realpath $2`
+			[[ -d "$path" ]] && echo "$path" > $CONFIG_DIR/path
 			echo "Wallpaper search path set"
 			exit $?
 		else
@@ -51,12 +72,6 @@ if [[ $# -gt 0 ]]; then
 		echo "  path        Set Wallpaper search path"
 		echo "  reset       Remove all settings"
 		exit 1
-	fi
-	
-	
-	# Poor man's config
-	if [[ -f "$CONFIG_DIR/directory" ]]; then
-		WALLPAPERS="`cat $CONFIG_DIR/directory`"
 	fi
 
 
